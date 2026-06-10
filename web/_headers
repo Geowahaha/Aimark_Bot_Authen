@@ -1,0 +1,4 @@
+/bot.md
+  Content-Type: text/markdown; charset=utf-8
+/bot
+  Link: </.well-known/http-message-signatures-directory>; rel="http-message-signatures-directory", </bot.md>; rel="alternate"; type="text/markdown"
