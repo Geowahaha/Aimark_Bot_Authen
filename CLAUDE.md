@@ -28,3 +28,11 @@ request signing + the public key directory + the public /bot identity page
 ## Workflow
 Small commits, conventional messages (`feat(botauth): …`). Run the e2e test +
 `node --check` on touched files before every commit. Windows/PowerShell host.
+
+## workerd JWK rule (proven on production — not a guess)
+JWK สำหรับ workerd: ห้ามมี `alg` อื่นนอกจาก `"EdDSA"`; strip `alg`/`use`/`key_ops` ก่อน `importKey` เสมอ.
+
+- `alg: "Ed25519"` → Node ยอมรับ, workerd โยน error ("alg does not match requested Ed25519 curve")
+- `alg: "EdDSA"` → ถูกต้องตาม RFC 8037, workerd ยอมรับ
+- Fix pattern in `getSigningKey`: `const { alg, use, key_ops, ...jwk } = JSON.parse(env.BOTAUTH_PRIVATE_JWK);`
+- e2e test สร้าง key ไม่มี `alg` field จึงไม่จับบั๊กนี้ — จับได้บน workerd เท่านั้น
